@@ -4,6 +4,10 @@
 #include <fstream>
 #include <iostream>
 #include <cmath>
+
+#include <iomanip>
+#include <sstream>
+
 //#include <string>
 #include "nlohmann/json.hpp"
 

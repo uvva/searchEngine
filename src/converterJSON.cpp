@@ -115,7 +115,10 @@ void ConverterJSON::putAnswers(std::vector<std::vector<std::pair<int, float>>>an
                 for(int iI = 0; iI < answers[i].size(); iI ++){
                     nlohmann::json newEntry;
                     newEntry["docid"] = answers[i][iI].first;
-                    newEntry["rank"] = answers[i][iI].second;
+                    std::ostringstream oss;
+                    oss << std::fixed << std::setprecision(3) << answers[i][iI].second;
+                    std::string formattedRank = oss.str();
+                    newEntry["rank"] = std::stof(formattedRank);//answers[i][iI].second;
                     answer["answers"][numRequest]["relevance"].push_back(newEntry);
                 }
             }

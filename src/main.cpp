@@ -2,14 +2,12 @@
 #include "invertedIndex.h"
 #include "searchServer.h"
 
-
-
 int main(){
     ConverterJSON converterJSON;
     InvertedIndex invertedIndex;
     std::vector <std::string> fileText;
     std::vector <std::string> requests;
-    //int maxResponses;
+
     try{
         fileText = converterJSON.GetTextDocuments();
         maxResponses = converterJSON.GetResponsesLimit();
@@ -48,6 +46,7 @@ int main(){
         }
         return 1;
     }
+    
     invertedIndex.UpdateDocumentBase(fileText);
 
     SearchServer searchServer(invertedIndex);

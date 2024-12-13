@@ -91,40 +91,44 @@ std::vector<std::string> ConverterJSON::GetRequests(){
 }
 
 void ConverterJSON::putAnswers(std::vector<std::vector<std::pair<int, float>>>answers){
-    nlohmann::json answer;
-    nlohmann::json requests;
-    nlohmann::json relevance;
-    nlohmann::json docidRank = {{"docid", "rank"}};
-
-    answer["answers"] = {};
+    std::string answer = "{\n\t\"answers\": {";
     
     for(int i = 0; i < answers.size(); i ++){
-        std::string numRequest = ("Request" + std::string(3 - (std::to_string(i)).size(), '0') +  std::to_string(i+1));
-        answer["answers"][numRequest] = {};
+        if(i > 0){
+            answer += ',';
+        }
+        std::string numRequest = ("\n\t\t\"request" + std::string(3 - (std::to_string(i)).size(), '0') +  std::to_string(i+1) + "\": {");
+        answer += numRequest;
         if(answers[i].empty()){
-            answer["answers"][numRequest]["result"] = "false";
+            answer += "\n\t\t\t\"result\": \"false\"";
         }
         else{
-            answer["answers"][numRequest]["result"] = "true";
+            answer += "\n\t\t\t\"result\": \"true\",";
             if(answers[i].size() ==  1){
-                answer["answers"][numRequest]["docid"] = answers[i][0].first;
-                answer["answers"][numRequest]["rank"] = std::round(answers[i][0].second * 1000) / 1000;
+                std::ostringstream oss;
+                oss << std::fixed << std::setprecision(3) << answers[i][0].second;
+                std::string formatedRank = oss.str();
+                answer += "\n\t\t\t\"docid\": " + std::to_string(answers[i][0].first) + ", \"rank\": " + formatedRank;
             }
             else{
-                answer["answers"][numRequest]["relevance"] = {};
+                answer += "\n\t\t\t\"relevance\": {";
                 for(int iI = 0; iI < answers[i].size(); iI ++){
-                    nlohmann::json newEntry;
-                    newEntry["docid"] = answers[i][iI].first;
+                    if(iI > 0){
+                        answer += ',';
+                    }
                     std::ostringstream oss;
                     oss << std::fixed << std::setprecision(3) << answers[i][iI].second;
-                    std::string formattedRank = oss.str();
-                    newEntry["rank"] = std::stof(formattedRank);//answers[i][iI].second;
-                    answer["answers"][numRequest]["relevance"].push_back(newEntry);
+                    std::string formatedRank = oss.str();
+                    answer += "\n\t\t\t\t\"docid\": " + std::to_string(answers[i][iI].first) + ", \"rank\": " + formatedRank;
                 }
+                answer += "\n\t\t\t}";
             }
         }
+        answer += "\n\t\t}";
     }
+    answer += "\n\t}\n}";
     std::ofstream createJson;
     createJson.open("answers.json");
-    createJson << std::setw(4) << answer;
+    createJson << std::setw(1) << answer;
+    createJson.close();
 }

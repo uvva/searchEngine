@@ -36,6 +36,7 @@ void InvertedIndex::UpdateDocumentBase(std::vector<std::string> inputDocs){
     std::vector<std::thread> threads(inputDocs.size());
     for(int iDoc = 0; iDoc < inputDocs.size(); iDoc ++){
         docs.push_back(inputDocs[iDoc]);
+
         threads[iDoc] = std::thread([=](){
             std::stringstream checkDocs(inputDocs[iDoc]);
             std::string subStr;
@@ -66,6 +67,7 @@ void InvertedIndex::UpdateDocumentBase(std::vector<std::string> inputDocs){
                 }
             }
         });
+        
     }
     for(auto& th : threads){
         th.join();

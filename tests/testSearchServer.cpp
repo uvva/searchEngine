@@ -68,3 +68,45 @@ TEST(TestCaseSearchServer, TestTop5) {
     std::vector<vector<RelativeIndex>> result = srv.search(request);
     ASSERT_EQ(result, expected);
 }
+
+TEST(TestCaseSearchServer, TestSpace) {
+    const vector<string> docs = {
+        "americano milk milk water",
+        "statement",
+        "water water water"
+    };
+    const vector<string> request = {""};
+    const std::vector<vector<RelativeIndex>> expected = {
+        {
+            
+        }
+    };
+    InvertedIndex idx;
+    idx.UpdateDocumentBase(docs);
+    SearchServer srv(idx);
+    std::vector<vector<RelativeIndex>> result = srv.search(request);
+    ASSERT_EQ(result, expected);
+}
+
+TEST(TestCaseSearchServer, TestSpecialSimbol) {
+    const vector<string> docs = {
+        "americano , milk , milk ; water .",
+        ". statement ;",
+        "water , water water"
+    };
+    const vector<string> request = {",", "."};
+    const std::vector<vector<RelativeIndex>> expected = {
+        {
+            {0, 1},
+            {2, 0.5}
+        }, {
+            {0, 1},
+            {1, 1}
+        }
+    };
+    InvertedIndex idx;
+    idx.UpdateDocumentBase(docs);
+    SearchServer srv(idx);
+    std::vector<vector<RelativeIndex>> result = srv.search(request);
+    ASSERT_EQ(result, expected);
+}

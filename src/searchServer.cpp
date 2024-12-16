@@ -5,6 +5,7 @@ int maxResponses = 5;
 std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<std::string>& queriesInput){
     std::vector<std::vector<RelativeIndex>> searchIndex;
     for(const std::string& oneInput : queriesInput){
+        std::cout << "\nRequest processing: " << oneInput << '\n';
         std::stringstream checkInput(oneInput);
         std::string subStrInput;
         std::vector<Entry> entry;
@@ -43,13 +44,15 @@ std::vector<std::vector<RelativeIndex>> SearchServer::search(const std::vector<s
                 RelativeIndex relativeIndex;
                 relativeIndex.doc_id = entry[i].doc_id;
                 relativeIndex.rank = (float)entry[i].count / (float)max;
+                std::cout << "ID document: " << relativeIndex.doc_id << ' ' << "Rank: " << relativeIndex.rank << '\n';
                 vectorRelativeIndex.push_back(relativeIndex);
             }
         }
         std::sort(vectorRelativeIndex.begin(), vectorRelativeIndex.end(), [] (const RelativeIndex& x, const RelativeIndex& y){
-            return (x.rank > y.rank);
+            return (x.rank > y.rank) || (x.rank == y.rank && x.doc_id < y.doc_id);
         });
         searchIndex.push_back(vectorRelativeIndex);
+        std::cout << "Processing of the request is completed\n";
     }
     if(searchIndex.size() > 0){
         return searchIndex;

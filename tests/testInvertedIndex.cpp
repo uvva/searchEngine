@@ -17,6 +17,7 @@ void TestInvertedIndexFunctionality(
     }
     ASSERT_EQ(result, expected);
 }
+
 TEST(TestCaseInvertedIndex, TestBasic) {
     const vector<string> docs = {
         "london is the capital of great britain",
@@ -38,9 +39,9 @@ TEST(TestCaseInvertedIndex, TestBasic2) {
         "milk milk milk milk water water water",
         "milk water water",
         "milk milk milk milk milk water water water water water",
-        "americano cappuchino"
+        "americano cappucсino"
     };
-    const vector<string> requests = {"milk", "water", "cappuchino"};
+    const vector<string> requests = {"milk", "water", "cappucсino"};
     const vector<vector<Entry>> expected = {
         {
             {0, 4}, {1, 1}, {2, 5}
@@ -64,6 +65,38 @@ TEST(TestCaseInvertedIndex, TestInvertedIndexMissingWord) {
 
         }, {
             {1, 1}
+        }
+    };
+    TestInvertedIndexFunctionality(docs, requests, expected);
+}
+
+TEST(TestCaseInvertedIndex, TestSpaceRequests) {
+    const vector<string> docs = {
+        "americano milk milk water",
+        "statement",
+        "water water water"
+    };
+    const vector<string> requests = {""};
+    const vector<vector<Entry>> expected = {
+        {
+
+        }
+    };
+    TestInvertedIndexFunctionality(docs, requests, expected);
+}
+
+TEST(TestCaseInvertedIndex, TestSpecialSimbol) {
+    const vector<string> docs = {
+        "americano , milk , milk ; water .",
+        ". statement ;",
+        "water , water water"
+    };
+    const vector<string> requests = {",", "."};
+    const vector<vector<Entry>> expected = {
+        {
+            {0, 2}, {2, 1}
+        }, {
+            {0, 1}, {1, 1}
         }
     };
     TestInvertedIndexFunctionality(docs, requests, expected);

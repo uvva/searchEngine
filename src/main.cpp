@@ -13,41 +13,16 @@ int main(){
         maxResponses = converterJSON.GetResponsesLimit();
         requests = converterJSON.GetRequests();
     }
-    catch(int& e){
-        switch (e)
-        {
-        case 1:
-            std::cout << "Config file is missing.";
-            break;
-        case 2:
-            std::cout << "Incorrect config file.";
-            break;
-        case 3:
-            std::cout << "Config file is empty.";
-            break;
-        case 4:
-            std::cout << "Config.json has incorrect file version.";
-            break;
-        case 5:
-            std::cout << "No information about files in Config.json.";
-            break;
-        case 6:
-            std::cout << "Request file is missing.";
-            break;
-        case 7:
-            std::cout << "Incorrect request file.";
-            break;
-        case 8:
-            std::cout << "Request file is empty.";
-            break;
-        default:
-            std::cout << "Unknow error.";
-            break;
-        }
+    catch(std::string& er){
+        std::cout << er;
         return 1;
     }
     
+    std::cout << "Sending text file documents.\n";
+
     invertedIndex.UpdateDocumentBase(fileText);
+
+
 
     SearchServer searchServer(invertedIndex);
 

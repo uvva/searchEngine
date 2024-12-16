@@ -3,13 +3,13 @@
 std::vector<std::string> ConverterJSON::GetTextDocuments(){
     streamFile.open(configName);
     if(!streamFile.is_open()){
-        throw 1;
+        throw "Config file is missing.";
     }
 
     std::ifstream testFile(configName);
 
     if(!(nlohmann::json::accept(testFile))){
-        throw 2;
+        throw "Incorrect config file.";
     }
     testFile.close();
         
@@ -17,22 +17,22 @@ std::vector<std::string> ConverterJSON::GetTextDocuments(){
         
     auto checkConfig = streamJson.find("config");
     if(checkConfig == streamJson.end()){
-        throw 3;
+        throw "Config file is empty.";
     }
     auto checkConfigVersion = streamJson["config"].find("version");
     auto checkConfigName = streamJson["config"].find("name");
     auto checkConfigResp = streamJson["config"].find("max_responses");
     if(checkConfigVersion == streamJson["config"].end() | checkConfigName == streamJson["config"].end() | checkConfigResp == streamJson["config"].end()){
-        throw 3;
+        throw "Config file is empty.";
     }
 
     if ((streamJson["config"]["version"].get<std::string>()) != version){
-        throw 4;
+        throw "Config.json has incorrect file version.";
     }
 
     auto checkFile = streamJson.find("files");
     if(checkFile == streamJson.end()){
-        throw 5;
+        throw "No information about files in Config.json.";
     }
 
     std::cout << "Initializing the engine " << streamJson["config"]["name"] << '\n';
@@ -65,13 +65,13 @@ int ConverterJSON::GetResponsesLimit(){
 std::vector<std::string> ConverterJSON::GetRequests(){
     streamFile.open(requestName);
     if(!streamFile.is_open()){
-        throw 6;
+        throw "Request file is missing.";
     }
 
     std::ifstream testFile(requestName);
 
     if(!(nlohmann::json::accept(testFile))){
-        throw 7;
+        throw "Incorrect request file.";
     }
 
     testFile.close();
@@ -80,7 +80,7 @@ std::vector<std::string> ConverterJSON::GetRequests(){
 
     auto checkConfig = streamJson.find("requests");
     if(checkConfig == streamJson.end()){
-        throw 8;
+        throw "Request file is empty.";
     }
     std::vector<std::string> request;
 
